@@ -40,6 +40,7 @@ public class Controller implements Initializable {
 
     private boolean isDotPressed = false;
 
+
     @FXML
     public void keyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode().isKeypadKey()) {
