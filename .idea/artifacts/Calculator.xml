@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Calculator">
+    <output-path>$PROJECT_DIR$/out/artifacts/Calculator</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="sample.Main" />
+        <option name="description" value="" />
+        <option name="height" value="312" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="Calculator_forghani" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+        <option name="width" value="280" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Calculator.jar">
+        <element id="module-output" name="Calculator" />
+      </element>
+      <element id="library" level="project" name="jfoenix-8.0.8" />
+    </root>
+  </artifact>
+</component>
