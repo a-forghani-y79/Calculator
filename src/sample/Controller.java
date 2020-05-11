@@ -13,10 +13,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    @FXML
-    private boolean isOperatorPressed=false;
-    private String operator="";
-    private BigDecimal temp , sum;
+
+    private boolean isOperatorPressed = false;
+    private boolean isDotPressed = false;
+    private String operator = "";
+    private BigDecimal temp, sum;
 
     @FXML
     private JFXTextField textField;
@@ -26,20 +27,18 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    public void onClickNumber(ActionEvent event){
-        if(event.getSource() instanceof JFXButton) {
-            JFXButton btn = (JFXButton)event.getSource();
+    public void onClickNumber(ActionEvent event) {
+        if (event.getSource() instanceof JFXButton) {
+            JFXButton btn = (JFXButton) event.getSource();
             if (isOperatorPressed) {
                 textField.setText(btn.getText().trim());
 
             } else {
-                textField.setText(textField.getText().trim()+btn.getText().trim());
+                textField.setText(textField.getText().trim() + btn.getText().trim());
             }
-            isOperatorPressed=false;
+            isOperatorPressed = false;
         }
     }
-
-    private boolean isDotPressed = false;
 
 
     @FXML
@@ -54,7 +53,6 @@ public class Controller implements Initializable {
             onPressDotKey(keyEvent);
             onPressOperatorKey(keyEvent);
         }
-        // System.out.println("keyPressed: "+ keyEvent.getCode().toString());
     }
 
     public void onPressDotKey(KeyEvent keyEvent) {
@@ -86,11 +84,21 @@ public class Controller implements Initializable {
     }
 
     public void onPressOperatorKey(KeyEvent keyEvent) {
+        boolean flag = false;
         if (!textField.getText().isEmpty()) {
-            temp=new BigDecimal(textField.getText());
+            try {
+                temp = new BigDecimal(textField.getText());
+            } catch (NumberFormatException e) {
+                temp = new BigDecimal(0);
+            }
             switch (operator) {
                 case "/":
-                    sum = sum.divide(temp);
+                    try {
+                        sum = sum.divide(temp);
+                    } catch (ArithmeticException e) {
+                        textField.setText(e.getMessage());
+                        flag = true;
+                    }
                     break;
                 case "X":
                     sum = sum.multiply(temp);
@@ -107,7 +115,10 @@ public class Controller implements Initializable {
         }
 
         if (keyEvent.getCode().toString().equals("ENTER")) {
-            textField.setText(sum.toString());
+            if (flag)
+                textField.setText("Divide by Zero");
+            else
+                textField.setText(String.valueOf(sum));
             operator = "";
         } else {
             textField.setText("");
@@ -135,13 +146,23 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickOperator(ActionEvent event) {
-        if(event.getSource() instanceof JFXButton) {
-            JFXButton btn = (JFXButton)event.getSource();
-            if (!textField.getText().isEmpty()){
-                temp=new BigDecimal(textField.getText());
+        boolean flag = false;
+        if (event.getSource() instanceof JFXButton) {
+            JFXButton btn = (JFXButton) event.getSource();
+            if (!textField.getText().isEmpty()) {
+                try {
+                    temp = new BigDecimal(textField.getText());
+                } catch (NumberFormatException e) {
+                    temp = new BigDecimal(0);
+                }
                 switch (operator) {
                     case "/":
-                        sum = sum.divide(temp);
+                        try {
+                            sum = sum.divide(temp);
+                        } catch (ArithmeticException e) {
+                            textField.setText(e.getMessage());
+                            flag = true;
+                        }
                         break;
                     case "X":
                         sum = sum.multiply(temp);
@@ -156,22 +177,25 @@ public class Controller implements Initializable {
                         sum = new BigDecimal(temp.toString());
                 }
             }
-            if (btn.getText().equals("=")){
-                textField.setText(String.valueOf(sum));
-                operator="";
-            }else {
+            if (btn.getText().equals("=")) {
+                if (flag)
+                    textField.setText("Divide by Zero");
+                else
+                    textField.setText(String.valueOf(sum));
+                operator = "";
+            } else {
                 textField.setText("");
                 isDotPressed = false;
-                operator=btn.getText().trim();
+                operator = btn.getText().trim();
             }
-            isOperatorPressed=true;
+            isOperatorPressed = true;
         }
     }
 
     @FXML
     public void onClickDel() {
-        if (textField.getText().length()>0){
-            textField.setText(textField.getText(0,textField.getText().length()-1));
+        if (textField.getText().length() > 0) {
+            textField.setText(textField.getText(0, textField.getText().length() - 1));
         }
     }
 
@@ -179,12 +203,12 @@ public class Controller implements Initializable {
     public void onClickCE() {
         textField.setText("");
         temp = new BigDecimal(0);
-        sum=new BigDecimal(0);
-        isOperatorPressed=false;
-        operator="";
-  }
-
+        sum = new BigDecimal(0);
+        isOperatorPressed = false;
+        operator = "";
     }
+
+}
 
 
 
